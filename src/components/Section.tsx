@@ -6,7 +6,7 @@ export function Section({
   eyebrow,
   title,
   intro,
-  tinted = false,
+  tone = "bone",
   className,
   children,
 }: {
@@ -14,30 +14,53 @@ export function Section({
   eyebrow?: string;
   title?: string;
   intro?: string;
-  tinted?: boolean;
+  /** bone = page ground, sand = alternating band, petrol = dark section. */
+  tone?: "bone" | "sand" | "petrol";
   className?: string;
   children?: React.ReactNode;
 }) {
+  const isPetrol = tone === "petrol";
+
   return (
     <section
       id={id}
-      className={clsx("py-20 md:py-28", tinted && "bg-teal-50", className)}
+      className={clsx(
+        "py-16 md:py-26",
+        tone === "sand" && "bg-sand",
+        isPetrol && "bg-petrol-800 text-bone",
+        className,
+      )}
     >
       <Container>
         {(eyebrow || title || intro) && (
-          <div className="max-w-3xl">
+          <div className="flex max-w-[58ch] flex-col gap-4">
             {eyebrow && (
-              <p className="font-display text-sm font-semibold uppercase tracking-[0.18em] text-teal-600">
+              <p
+                className={clsx(
+                  "eyebrow",
+                  isPetrol && "text-gold-400",
+                )}
+              >
                 {eyebrow}
               </p>
             )}
             {title && (
-              <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">
+              <h2
+                className={clsx(
+                  "text-[clamp(2rem,3.9vw,3rem)] tracking-tight",
+                  isPetrol && "text-bone",
+                )}
+              >
                 {title}
               </h2>
             )}
             {intro && (
-              <p className="mt-5 text-lg leading-relaxed text-ink/80">
+              <p
+                className={clsx(
+                  "text-lg leading-relaxed",
+                  isPetrol ? "text-bone/75" : "text-ink-soft",
+                )}
+              >
                 {intro}
               </p>
             )}

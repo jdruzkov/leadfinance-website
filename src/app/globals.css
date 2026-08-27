@@ -1,36 +1,49 @@
 @import "tailwindcss";
 
 /*
- * Design tokens carried over from the existing leadfinance.eu build
- * (Astra global palette + Montserrat headings).
+ * Design tokens: the "B petrol lead" direction.
+ * A single committed palette — warm bone ground, deep petrol for dark
+ * sections and primary actions, ochre gold as the accent on petrol,
+ * mid-teal for italic display accents and figures.
  */
 @theme {
-  --color-teal-50: #f3f9fb;
-  --color-teal-100: #dbeef2;
-  --color-teal-200: #b7dde6;
-  --color-teal-500: #2a8b9c;
-  --color-teal-600: #1a6c7a;
-  --color-teal-700: #145761;
-  --color-navy-700: #1d4257;
-  --color-navy-800: #153243;
-  --color-navy-900: #000f2b;
-  --color-ink: #3a3a3a;
+  --color-bone: #f2ebe1;
+  --color-sand: #e7dcc9;
+  --color-surface: #fcf9f4;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --color-petrol-700: #14443f;
+  --color-petrol-800: #0f3b39;
+  --color-petrol-900: #0a2c2a;
 
-  --container-site: 1200px;
+  --color-gold-500: #b8862e;
+  --color-gold-400: #cfa24a;
+  --color-gold-100: #e9dcbb;
+
+  --color-teal-600: #1c6c68;
+
+  --color-ink: #1b1b18;
+  --color-ink-soft: #6e6459;
+  --color-hairline: #ddd1bf;
+  --color-hairline-sand: #d6c8b1;
+
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --container-site: 1220px;
+  --radius-brand: 4px;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
     /* Offset anchor targets so the sticky header does not cover them. */
-    scroll-padding-top: 5rem;
+    scroll-padding-top: 5.75rem;
   }
 
   body {
-    background-color: #ffffff;
+    font-family: var(--font-sans);
+    background-color: var(--color-bone);
     color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
   }
@@ -40,13 +53,24 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    color: var(--color-navy-800);
+    color: var(--color-ink);
+    font-weight: 400;
     text-wrap: balance;
+    line-height: 1.1;
+  }
+
+  /* Eyebrows, labels and figures all run in the mono face. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-teal-600);
   }
 
   :focus-visible {
     outline: 2px solid var(--color-teal-600);
-    outline-offset: 2px;
+    outline-offset: 3px;
   }
 }
 

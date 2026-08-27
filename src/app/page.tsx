@@ -2,7 +2,8 @@ import { Hero } from "@/components/Hero";
 import { Section } from "@/components/Section";
 import { ServicesGrid } from "@/components/ServicesGrid";
 import { ContactForm } from "@/components/ContactForm";
-import { site } from "@/content/site";
+import Link from "next/link";
+import { about } from "@/content/site";
 
 const approach = [
   {
@@ -43,61 +44,58 @@ export default function Home() {
 
       <Section
         id="approach"
-        tinted
+        tone="petrol"
         eyebrow="How we work"
         title="A structured path from raw data to confident decisions"
       >
-        <ol className="mt-14 grid gap-8 sm:grid-cols-2">
+        <ol className="mt-13">
           {approach.map((item) => (
             <li
               key={item.step}
-              className="rounded-xl border border-teal-100 bg-white p-8"
+              className="grid grid-cols-[auto_1fr] items-start gap-x-7 gap-y-2 border-t border-bone/15 py-7 last:border-b last:border-bone/15"
             >
-              <span className="font-display text-sm font-semibold tracking-widest text-teal-600">
+              <span className="row-span-2 pt-2 font-mono text-[0.76rem] tabular-nums tracking-[0.1em] text-gold-400">
                 {item.step}
               </span>
-              <h3 className="mt-3 font-display text-xl font-semibold">
+              <h3 className="font-display text-[1.42rem] text-bone">
                 {item.title}
               </h3>
-              <p className="mt-3 leading-relaxed text-ink/75">{item.body}</p>
+              <p className="max-w-[62ch] leading-relaxed text-bone/75">
+                {item.body}
+              </p>
             </li>
           ))}
         </ol>
       </Section>
 
-      <Section id="about" eyebrow="About" title={`Who ${site.shortName} is`}>
-        <div className="mt-10 grid gap-10 md:grid-cols-2">
-          <div className="space-y-5 text-lg leading-relaxed text-ink/80">
-            <p>
-              {site.name} is an Estonian financial management practice working
-              with growing companies across Estonia and the wider EU. We act as
-              the finance function that scaling businesses need but do not yet
-              have in-house.
+      <Section
+        id="about"
+        tone="sand"
+        eyebrow="About"
+        title={about.title}
+      >
+        <div className="mt-10 grid gap-10 md:grid-cols-[1.1fr_0.9fr] md:gap-16">
+          <div className="flex flex-col gap-5 text-lg leading-relaxed text-ink-soft">
+            {about.summary.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+            <p className="mt-1">
+              <Link
+                href="/about"
+                className="inline-block rounded-brand border border-hairline-sand bg-surface px-7 py-4 font-medium text-ink transition-colors hover:border-ink-soft hover:bg-white"
+              >
+                Read more about us
+              </Link>
             </p>
-            <p>
-              Our work spans SaaS, hybrid, and project-based business models —
-              from building the first real management reporting system, through
-              budgeting and cash flow planning, to investor reporting and grant
-              compliance.
-            </p>
-            {/* TODO: replace with founder bio, credentials, and client references. */}
           </div>
 
-          <dl className="grid grid-cols-2 gap-6 self-start">
-            {[
-              { k: "Focus", v: "Management reporting & planning" },
-              { k: "Based in", v: site.country },
-              { k: "Works with", v: "SaaS, hybrid & project businesses" },
-              { k: "Funding", v: "EAS & EU grant programmes" },
-            ].map((item) => (
-              <div
-                key={item.k}
-                className="rounded-lg border border-teal-100 bg-teal-50 p-5"
-              >
-                <dt className="font-display text-xs font-semibold uppercase tracking-wider text-teal-600">
+          <dl className="grid grid-cols-2 gap-px self-start border border-hairline-sand bg-hairline-sand">
+            {about.facts.map((item) => (
+              <div key={item.k} className="flex flex-col gap-2.5 bg-sand p-6">
+                <dt className="font-mono text-[0.66rem] uppercase tracking-[0.14em] text-teal-600">
                   {item.k}
                 </dt>
-                <dd className="mt-2 font-medium text-navy-800">{item.v}</dd>
+                <dd className="text-[1.02rem] leading-snug text-ink">{item.v}</dd>
               </div>
             ))}
           </dl>
@@ -106,7 +104,6 @@ export default function Home() {
 
       <Section
         id="contact"
-        tinted
         eyebrow="Contact"
         title="Tell us where the business stands"
         intro="Share a little about your company and what you are trying to solve. We will come back with how we would approach it."

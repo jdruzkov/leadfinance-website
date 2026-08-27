@@ -1,20 +1,28 @@
 import type { Metadata } from "next";
-import { Inter, Montserrat } from "next/font/google";
+import { DM_Sans, IBM_Plex_Mono, Playfair_Display } from "next/font/google";
 import { site } from "@/content/site";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
   display: "swap",
 });
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -40,13 +48,14 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang={site.locale}>
-      <body
-        className={`${inter.variable} ${montserrat.variable} font-sans flex min-h-screen flex-col`}
-      >
+    <html
+      lang={site.locale}
+      className={`${dmSans.variable} ${playfair.variable} ${plexMono.variable}`}
+    >
+      <body className="flex min-h-screen flex-col bg-bone text-ink">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-teal-600 focus:px-4 focus:py-2 focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-50 focus:rounded-brand focus:bg-petrol-800 focus:px-5 focus:py-3 focus:text-bone"
         >
           Skip to content
         </a>
