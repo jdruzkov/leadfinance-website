@@ -88,10 +88,13 @@ writes a self-contained `out/` directory.
 
 ### GitHub Pages
 
-`.github/workflows/deploy.yml` builds and publishes on every push to `main`.
-Enable it once under **Settings -> Pages -> Build and deployment -> Source:
-GitHub Actions**. The site is then served at
-`https://<user>.github.io/leadfinance-website/`.
+`.github/workflows/deploy.yml` builds and publishes on every push to `main`,
+and enables Pages itself on the first run. If that step is refused, set it by
+hand in the **repository** settings (not the account ones) at
+`https://github.com/<user>/leadfinance-website/settings/pages` ->
+**Build and deployment** -> Source -> **GitHub Actions**.
+
+The site is then served at `https://<user>.github.io/leadfinance-website/`.
 
 A project page lives under a sub-path, so the build sets `NEXT_PUBLIC_BASE_PATH`
 to the repository name and every asset and link picks up that prefix. To test
