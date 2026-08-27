@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# leadfinance-website
 
-## Getting Started
+Marketing site for **LeadFinance OÜ** — an Estonian financial management practice
+(management reporting, forecasting, cash flow, investor reporting, grants and
+tender advisory).
 
-First, run the development server:
+Built with Next.js 16 (App Router), TypeScript and Tailwind CSS v4.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Other scripts:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build      # production build
+npm run start      # serve the production build
+npm run lint       # eslint
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project structure
 
-## Learn More
+```
+src/
+├─ app/
+│  ├─ layout.tsx              root layout, fonts, metadata
+│  ├─ page.tsx                landing page (hero, services, approach, about, contact)
+│  ├─ globals.css             Tailwind v4 theme tokens
+│  ├─ not-found.tsx           404
+│  ├─ robots.ts               robots.txt
+│  ├─ sitemap.ts              sitemap.xml
+│  ├─ services/[slug]/        one statically generated page per service
+│  └─ api/contact/route.ts    lead-capture endpoint
+├─ components/                Header, Footer, Hero, Section, ServicesGrid, ContactForm, …
+├─ content/
+│  ├─ site.ts                 site name, URL, nav, contact address
+│  └─ services.ts             the seven services (single source of truth)
+└─ lib/clsx.ts
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Editing content
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Nearly all copy lives in [`src/content`](src/content). Adding an entry to
+`services.ts` automatically creates its card on the landing page, its footer
+link, and a statically generated page at `/services/<slug>` — no routing changes
+needed.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Design system
 
-## Deploy on Vercel
+Tokens were carried over from the existing `leadfinance.eu` WordPress build
+(Astra global palette) and are defined in `src/app/globals.css`:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Token | Value | Use |
+| --- | --- | --- |
+| `teal-600` | `#1a6c7a` | primary / links / buttons |
+| `navy-800` | `#153243` | headings, hero background |
+| `navy-900` | `#000f2b` | footer |
+| `ink` | `#3a3a3a` | body text |
+| `teal-50` | `#f3f9fb` | tinted section background |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Headings use **Montserrat**, body copy uses **Inter**, both self-hosted via
+`next/font`. Content max-width is 1200px.
+
+## Before launch
+
+A few things are deliberately left as placeholders:
+
+- **Contact address** — `src/content/site.ts` uses `info@leadfinance.eu`; confirm
+  the real address. The current WordPress site publishes no public contact details.
+- **Lead delivery** — `src/app/api/contact/route.ts` validates submissions and
+  logs them server-side, but does not yet deliver them. Wire it to an email
+  provider (Resend, Postmark) or a CRM before relying on the form.
+- **Brand assets** — the header uses a typographic wordmark. The old site still
+  hotlinks the Astra demo logo from `websitedemos.net`, so a real logo and
+  favicon are still needed.
+- **About section** — needs founder bio, credentials, and client references.
+- **Legal** — privacy policy and imprint / company registry details.
+
+## Deploying
+
+The site is fully static apart from `/api/contact`. It deploys to Vercel with no
+configuration; any Node host works via `npm run build && npm run start`.
