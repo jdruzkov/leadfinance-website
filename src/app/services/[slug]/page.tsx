@@ -58,7 +58,7 @@ export default async function ServicePage({ params }: Props) {
 
       <Section>
         <div className="max-w-3xl space-y-6 text-lg leading-relaxed text-ink-soft">
-          <p className="text-xl font-medium text-ink">{service.summary}</p>
+          <p>{service.summary}</p>
           <p>{service.detail}</p>
         </div>
 
