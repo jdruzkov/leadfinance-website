@@ -28,7 +28,7 @@ export const nav = [
 export const about = {
   title: "About",
   description:
-    "Lolita, founder of LeadFinance — a finance leader with more than twelve years of experience across auditing, business controlling, and financial planning and analysis.",
+    "Lolita, founder of LeadFinance and a finance leader with more than twelve years of experience across auditing, business controlling, and financial planning and analysis.",
 
   founder: {
     name: "Lolita",
@@ -40,7 +40,7 @@ export const about = {
 
   summary: [
     "LeadFinance OÜ is an Estonian financial management practice working with growing companies across Estonia and the wider EU. We act as the finance function that scaling businesses need but do not yet have in-house.",
-    "Our work spans SaaS, hybrid, and project-based business models — from building the first real management reporting system, through budgeting and cash flow planning, to investor reporting and grant compliance.",
+    "Our work spans SaaS, hybrid, and project-based business models, from building the first real management reporting system, through budgeting and cash flow planning, to investor reporting and grant compliance.",
   ],
 
   body: [

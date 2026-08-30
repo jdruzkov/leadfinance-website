@@ -3,7 +3,7 @@ import { Container } from "./Container";
 
 /**
  * Illustrative board-pack extract. These are placeholder figures for the
- * design, not any company's real numbers — the caption says so, and it
+ * design, not any company's real numbers. The caption says so, and it
  * should be swapped for a real anonymised extract before launch.
  */
 const boardPack = [
@@ -26,7 +26,7 @@ export function Hero() {
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink-soft">
             We build the management reporting, forecasting, and cash flow
             systems that let founders and boards see exactly where the business
-            stands — and where it is heading.
+            stands, and where it is heading.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Link

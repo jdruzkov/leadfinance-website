@@ -20,7 +20,7 @@ export function ContactForm() {
    * The form validates here and hands the enquiry to the visitor's mail
    * client, pre-addressed and pre-filled. Swap this for a real endpoint
    * (Resend, Postmark, Formspree) when the site moves to a host that runs
-   * Node — the field names already match what the old API route expected.
+   * Node. The field names already match what the old API route expected.
    */
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

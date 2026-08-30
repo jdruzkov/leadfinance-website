@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: about.description,
   alternates: { canonical: "/about" },
   openGraph: {
-    title: `${about.title} — ${site.name}`,
+    title: `${about.title} | ${site.name}`,
     description: about.description,
     url: "/about",
     images: [{ url: lolitaPhoto.src }],

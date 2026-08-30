@@ -15,7 +15,7 @@ export function Logo({ variant = "dark" }: { variant?: "dark" | "light" }) {
       className={`inline-flex items-center gap-3 font-display text-[1.42rem] font-medium tracking-tight ${
         isLight ? "text-bone" : "text-ink"
       }`}
-      aria-label={`${site.name} — home`}
+      aria-label={`${site.name}, home`}
     >
       <svg
         width="32"

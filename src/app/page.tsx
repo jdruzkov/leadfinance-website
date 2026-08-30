@@ -9,7 +9,7 @@ const approach = [
   {
     step: "01",
     title: "Understand the business",
-    body: "We start from how the company actually makes money — the model, the entities, the systems already in place — before touching a single report.",
+    body: "We start from how the company actually makes money, looking at the model, the entities, and the systems already in place, before touching a single report.",
   },
   {
     step: "02",
