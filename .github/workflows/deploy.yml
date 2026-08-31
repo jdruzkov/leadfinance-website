@@ -34,11 +34,9 @@ jobs:
         run: npm run lint
 
       - name: Build static export
-        # A project page is served from https://<user>.github.io/<repo>/, so every
-        # asset needs that prefix. Delete this env block when moving to a custom
-        # domain, where the site sits at the root.
-        env:
-          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+        # Served from the custom domain in public/CNAME, so the site sits at the
+        # root and needs no path prefix. Reinstate NEXT_PUBLIC_BASE_PATH here if
+        # it ever goes back to a <user>.github.io/<repo>/ project page.
         run: npm run build
 
       - name: Configure Pages
