@@ -1,0 +1,637 @@
+/*
+ * Hero board deck: five dashboard panels stacked like folders in real 3D.
+ * Tailwind covers the rest of the site; this lives in a module because the
+ * deck depends on position-driven selectors, preserve-3d and keyframes.
+ */
+.stage {
+  --petrol: #0f3b39;
+  --teal: #1c6c68;
+  --rust: #9c4f3a;
+  --surface: #fcf9f4;
+  --gold-100: #e9dcbb;
+  --line: #e6ded2;
+  --faint: #9b9488;
+  --muted: #6b655b;
+  --mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --display: var(--font-playfair), Georgia, "Times New Roman", serif;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --step: 46px;
+  --rx: 0;
+  --ry: 0;
+  position: relative;
+  perspective: 1500px;
+  perspective-origin: 50% 40%;
+  padding-top: calc(var(--step) * 3 - 10px);
+}
+
+/* The deck leans toward the pointer; --rx and --ry are set from BoardDeck. */
+.deck {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--rx) * 1deg)) rotateY(calc(var(--ry) * 1deg));
+}
+
+.item {
+  position: absolute;
+  inset: 0 0 auto 0;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.8s var(--ease),
+    opacity 0.5s ease;
+}
+.item[data-p="0"] {
+  position: relative;
+  transform: none;
+}
+.item[data-p="1"] {
+  transform: translate3d(0, calc(var(--step) * -1.12), -70px);
+}
+.item[data-p="2"] {
+  transform: translate3d(0, calc(var(--step) * -2.26), -140px);
+}
+.item[data-p="3"] {
+  transform: translate3d(0, calc(var(--step) * -3.42), -210px);
+}
+/* Parked out of sight behind the stack, ready to fade in as the third tab. */
+.item[data-p="4"] {
+  transform: translate3d(0, calc(var(--step) * -4.2), -280px);
+  opacity: 0;
+  pointer-events: none;
+}
+/* The front card drops toward the viewer and fades before rejoining the back. */
+.item.leaving {
+  transform: translate3d(0, 90px, 80px) rotateX(-8deg);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.5s cubic-bezier(0.5, 0, 0.8, 0.4),
+    opacity 0.4s ease 0.08s;
+}
+
+.card {
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--surface);
+  box-shadow:
+    0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 10px 30px rgba(27, 27, 24, 0.1);
+  transition: box-shadow 0.6s ease;
+}
+.item[data-p="0"] .card {
+  box-shadow:
+    0 1px 2px rgba(27, 27, 24, 0.06),
+    0 -14px 30px rgba(10, 44, 42, 0.16),
+    0 30px 60px rgba(27, 27, 24, 0.16);
+}
+
+/* Heads act as folder tabs, each a shade lighter as it recedes. */
+.head {
+  display: flex;
+  width: 100%;
+  height: var(--step);
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 28px;
+  background: var(--petrol);
+  color: var(--surface);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: left;
+  transition:
+    background-color 0.7s ease,
+    color 0.2s ease;
+}
+.item[data-p="0"] .head {
+  cursor: default;
+}
+.item[data-p="1"] .head {
+  background: #1b4f4a;
+}
+.item[data-p="2"] .head {
+  background: #2c625c;
+}
+.item[data-p="3"] .head,
+.item[data-p="4"] .head {
+  background: #44766f;
+}
+.item:not([data-p="0"]) .head:hover,
+.item:not([data-p="0"]) .head:focus-visible {
+  background: #b8862e;
+  color: #1b1b18;
+  transition-duration: 0.2s;
+}
+.num {
+  margin-right: 12px;
+  color: #cfa24a;
+}
+.item:not([data-p="0"]) .head:hover .num,
+.item:not([data-p="0"]) .head:hover .meta {
+  color: inherit;
+}
+.meta {
+  color: var(--gold-100);
+}
+.body {
+  height: var(--bodyh, 418px);
+  padding: 22px 28px 24px;
+}
+
+/* Floating chips sit closer to the viewer than the deck, so they drift more. */
+.chip {
+  position: absolute;
+  z-index: 9;
+  transform: translateZ(90px);
+}
+.chipInner {
+  animation: bob 7s ease-in-out infinite;
+}
+.chipCash {
+  left: -48px;
+  bottom: -70px;
+  width: 430px;
+}
+.chipCash .chipInner {
+  border-radius: 4px;
+  box-shadow: 0 18px 40px rgba(10, 44, 42, 0.3);
+}
+.chipOk {
+  right: -20px;
+  bottom: -17px;
+}
+.chipOk .chipInner {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: 0 12px 28px rgba(27, 27, 24, 0.14);
+  color: var(--teal);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  animation-duration: 9s;
+  animation-delay: -3s;
+}
+.chipOk b {
+  font-weight: 400;
+  color: var(--petrol);
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+.caption {
+  margin-top: 106px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 0.71rem;
+  color: #6e6459;
+}
+.next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.next:hover {
+  color: var(--teal);
+}
+
+/* ---- KPIs ---- */
+.kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 18px;
+}
+.kpi {
+  min-width: 0;
+  padding: 0 20px;
+  border-left: 1px solid var(--line);
+}
+.kpi:nth-child(odd) {
+  padding-left: 0;
+  border-left: none;
+}
+.kpi:nth-child(n + 3) {
+  position: relative;
+  padding-top: 18px;
+}
+.kpi:nth-child(n + 3)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--line);
+}
+.kpi:nth-child(4)::before {
+  left: -1px;
+}
+.kpiLabel {
+  margin-bottom: 11px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.35;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--faint);
+}
+.kpiValue {
+  margin-bottom: 10px;
+  font-family: var(--display);
+  font-size: 38px;
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+.kpiValue small {
+  font-size: 22px;
+}
+.kpiDelta {
+  min-height: 35px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--teal);
+}
+.kpiDelta em {
+  font-style: normal;
+  color: var(--faint);
+}
+
+/* ---- cash box ---- */
+.cash {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 15px 22px;
+  border-radius: 4px;
+  background: var(--petrol);
+  color: var(--surface);
+}
+.cashLabel {
+  margin-bottom: 11px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.35;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-100);
+}
+.cashValue {
+  font-family: var(--display);
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+.cashValue small {
+  font-size: 19px;
+}
+.cashSide {
+  display: flex;
+  gap: 22px;
+}
+.cashSide > div {
+  padding-left: 22px;
+  border-left: 1px solid rgba(233, 220, 187, 0.26);
+}
+.cashK {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #a9c0b9;
+}
+.cashV {
+  font-family: var(--mono);
+  font-size: 16px;
+  white-space: nowrap;
+}
+.cashV span {
+  font-size: 10.5px;
+  color: #a9c0b9;
+}
+.cashSub {
+  display: block;
+  margin-top: 3px;
+  font-size: 10.5px;
+  white-space: nowrap;
+  color: #8faaa3;
+}
+
+/* ---- panels ---- */
+.sub {
+  min-height: 16px;
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  min-height: 15px;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.legend i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 6px;
+  border-radius: 2px;
+  vertical-align: -1px;
+}
+.swTotal {
+  background: var(--petrol);
+}
+.swUp {
+  background: var(--teal);
+}
+.swDown {
+  background: var(--rust);
+}
+.legend i.swMark {
+  width: 14px;
+  height: 2px;
+  border-radius: 1px;
+  background: #8a7642;
+  vertical-align: 3px;
+}
+.chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.chart text {
+  font-family: var(--mono);
+}
+
+.cost {
+  display: grid;
+  grid-template-columns: minmax(0, 172px) 1fr 70px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.costName {
+  font-size: 13px;
+  line-height: 1.35;
+}
+.costName em {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-style: normal;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.costTrack {
+  display: block;
+  height: 11px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #efe8dc;
+}
+.costFill {
+  display: block;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--petrol);
+}
+.costFillAlt {
+  background: #7e9a94;
+}
+.costVal {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--muted);
+}
+.costVal span {
+  margin-left: 6px;
+  color: #b0a99c;
+}
+.costNote {
+  margin-top: 22px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--faint);
+}
+
+.ytd {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ytd th {
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-align: right;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.ytd th:not(:first-child),
+.ytd td:not(:first-child) {
+  width: 92px;
+}
+.ytd td {
+  padding: 8.5px 0;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 13px;
+  text-align: right;
+  white-space: nowrap;
+}
+.ytd tbody tr:first-child td {
+  border-top: none;
+}
+.ytd td:first-child {
+  font-family: inherit;
+  text-align: left;
+}
+.ytd td.fc {
+  font-size: 12.5px;
+  color: #8e877b;
+}
+.ytd td.pos,
+.ytd td.neg {
+  font-size: 12px;
+  color: var(--teal);
+}
+.ytd td.neg {
+  color: var(--rust);
+}
+.ytd tr.rule td {
+  border-top: 1.5px solid var(--petrol);
+  font-weight: 500;
+}
+.ytd tr.minor td:first-child {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/*
+ * Build-in animation. Resting state is the finished chart, so nothing is lost
+ * without motion; the keyframes only describe where each mark starts from.
+ * A panel replays when it is remounted as the front card.
+ */
+.bar {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: grow 0.75s var(--ease) var(--d, 0s) both;
+}
+.barDown {
+  transform-origin: 50% 0;
+}
+.fade {
+  animation: fadeIn 0.5s ease var(--d, 0s) both;
+}
+.rise {
+  animation: rise 0.55s var(--ease) var(--d, 0s) both;
+}
+.costFill {
+  animation: fillW 0.95s var(--ease) var(--d, 0s) both;
+}
+@keyframes grow {
+  from {
+    transform: scaleY(0);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes fillW {
+  from {
+    width: 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .chipCash {
+    left: -12px;
+  }
+  .chipOk {
+    right: -8px;
+  }
+}
+
+/* Phones: no overhanging chips, the cash box sits under the deck instead. */
+@media (max-width: 640px) {
+  .stage {
+    --step: 40px;
+  }
+  .head {
+    padding: 0 18px;
+    font-size: 10px;
+  }
+  .meta {
+    display: none;
+  }
+  .body {
+    padding: 18px 18px 20px;
+  }
+  .chipCash {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    margin-top: 16px;
+    transform: none;
+  }
+  .chipOk {
+    display: none;
+  }
+  .caption {
+    margin-top: 20px;
+  }
+  .cash,
+  .cashSide {
+    gap: 14px;
+  }
+  .cashSide > div {
+    padding-left: 14px;
+  }
+  .cashSub {
+    display: none;
+  }
+  .kpiLabel {
+    min-height: 27px;
+    white-space: normal;
+  }
+  .kpiValue {
+    font-size: 32px;
+  }
+  .cost {
+    grid-template-columns: minmax(0, 112px) 1fr 62px;
+    gap: 8px;
+  }
+  .costName {
+    font-size: 12px;
+  }
+  .ytd th:not(:first-child),
+  .ytd td:not(:first-child) {
+    width: 62px;
+  }
+  .ytd td,
+  .ytd td.fc {
+    font-size: 11px;
+  }
+  .ytd td.pos,
+  .ytd td.neg,
+  .ytd tr.minor td:first-child {
+    font-size: 10.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    transition: none;
+  }
+  .chipInner,
+  .bar,
+  .fade,
+  .rise,
+  .costFill {
+    animation: none;
+  }
+}
