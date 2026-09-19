@@ -1,6 +1,7 @@
 import { Hero } from "@/components/Hero";
 import { Section } from "@/components/Section";
-import { ServicesGrid } from "@/components/ServicesGrid";
+import { Container } from "@/components/Container";
+import { ServicesRing } from "@/components/services/ServicesRing";
 import { ContactForm } from "@/components/ContactForm";
 import Link from "next/link";
 import { about } from "@/content/site";
@@ -33,14 +34,12 @@ export default function Home() {
     <>
       <Hero />
 
-      <Section
-        id="services"
-        eyebrow="What we do"
-        title="Financial management, built around your business"
-        intro="Seven focused services covering everything from day-to-day reporting to investor due diligence and EU grant compliance."
-      >
-        <ServicesGrid />
-      </Section>
+      {/* The ring turns in 3D and its side frames overhang the container, so clip sideways. */}
+      <section id="services" className="overflow-x-clip py-16 md:py-26">
+        <Container>
+          <ServicesRing />
+        </Container>
+      </section>
 
       <Section
         id="approach"

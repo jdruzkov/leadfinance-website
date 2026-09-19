@@ -94,3 +94,52 @@ export const services: Service[] = [
 export function getService(slug: string): Service | undefined {
   return services.find((s) => s.slug === slug);
 }
+
+/**
+ * The three questions the services answer, used to group them on the landing
+ * page. Card copy stays on the services themselves; a group only names its
+ * members, in the order they are shown.
+ */
+export type ServiceGroup = {
+  number: string;
+  /** One-word label for the group switcher. */
+  verb: string;
+  title: string;
+  lead: string;
+  glyph: "bars" | "seal" | "forecast";
+  /** The petrol frame in the middle: the credibility anchor. */
+  anchor?: boolean;
+  slugs: string[];
+};
+
+export const serviceGroups: ServiceGroup[] = [
+  {
+    number: "01",
+    verb: "See",
+    title: "See how the business is really performing",
+    lead: "A reporting system built for your business, reconciled before anyone sees it, and explained in language your whole leadership team can act on.",
+    glyph: "bars",
+    slugs: ["financial-management-reporting", "financial-metrics-dashboards"],
+  },
+  {
+    number: "02",
+    verb: "Show",
+    title: "Show the numbers to the people who fund you",
+    lead: "Investors, boards, grant bodies and procurement officers all want the same thing, figures that stand up to scrutiny and a story that matches them.",
+    glyph: "seal",
+    anchor: true,
+    slugs: [
+      "investor-reporting",
+      "grants-project-financing",
+      "procurement-tender-financial-advisory",
+    ],
+  },
+  {
+    number: "03",
+    verb: "Plan",
+    title: "Plan what comes next",
+    lead: "A forecast that keeps pace with growth and a clear view of your runway, so the next decision is made on numbers rather than instinct.",
+    glyph: "forecast",
+    slugs: ["financial-planning-forecasting-budgeting", "cash-flow-management"],
+  },
+];

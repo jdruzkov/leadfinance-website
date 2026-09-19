@@ -1,0 +1,417 @@
+/*
+ * Services ring: the three service groups as a draggable 3D coverflow.
+ * Tailwind covers the section head; this lives in a module because frames are
+ * placed from custom properties the script writes every animation frame
+ * (--o offset on the ring, --a its absolute value, --haze).
+ */
+.wrap {
+  --petrol: #0f3b39;
+  --petrol-700: #14443f;
+  --teal: #1c6c68;
+  --bone: #f2ebe1;
+  --surface: #fcf9f4;
+  --gold-100: #e9dcbb;
+  --hair: #ddd1bf;
+  --hair-sand: #d6c8b1;
+  --mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.headRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 32px;
+}
+
+/* ---- See / Show / Plan switcher, with a marker that slides between them ---- */
+.tabs {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid var(--hair-sand);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.tab {
+  position: relative;
+  z-index: 1;
+  padding: 11px 22px;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #6e6459;
+  cursor: pointer;
+  transition: color 0.35s ease;
+}
+.tab b {
+  margin-right: 9px;
+  font-weight: 400;
+  opacity: 0.6;
+}
+.tabOn {
+  color: var(--bone);
+}
+.pill {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 0;
+  width: 0;
+  border-radius: 999px;
+  background: var(--petrol);
+  transition:
+    translate 0.55s var(--ease),
+    width 0.55s var(--ease);
+}
+
+/* ---- the ring ---- */
+.ring {
+  --rx: 0;
+  --ry: 0;
+  container-type: inline-size;
+  margin-top: 56px;
+  perspective: 1900px;
+  perspective-origin: 50% 42%;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.dragging {
+  cursor: grabbing;
+}
+/* All frames share one grid cell, so every frame is as tall as the tallest. */
+.inner {
+  --gap: min(400px, 33cqw);
+  display: grid;
+  justify-items: center;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(var(--rx) * 1deg)) rotateY(calc(var(--ry) * 1deg));
+}
+
+.frame {
+  --rule: var(--hair);
+  --accent: var(--teal);
+  --heading: var(--petrol);
+  --text: #5c554c;
+  position: relative;
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  width: min(440px, 100%);
+  border: 1px solid var(--hair);
+  background: var(--surface);
+  box-shadow:
+    0 1px 2px rgba(27, 27, 24, 0.05),
+    0 30px 70px rgba(27, 27, 24, 0.14);
+  transform: translate3d(calc(var(--o) * var(--gap)), 0, calc(var(--a) * -300px))
+    rotateY(calc(var(--o) * -36deg));
+  will-change: transform;
+}
+.anchor {
+  --rule: rgba(233, 220, 187, 0.26);
+  --accent: var(--gold-100);
+  --heading: #fcf9f4;
+  --text: #d5e1dd;
+  border-color: var(--petrol);
+  background: var(--petrol);
+  box-shadow:
+    0 2px 4px rgba(10, 44, 42, 0.22),
+    0 34px 80px rgba(10, 44, 42, 0.36);
+}
+/* Haze: side frames fade toward the page colour, like distance. */
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: var(--bone);
+  opacity: var(--haze, 0);
+  pointer-events: none;
+}
+/* Side frames are for steering; their links wake up once they face front. */
+.frame:not(.active) {
+  cursor: pointer;
+}
+.frame:not(.active) .svc {
+  pointer-events: none;
+}
+
+.frameHead {
+  padding: 30px 30px 26px;
+  border-bottom: 1px solid var(--rule);
+}
+.num {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+}
+.num::after {
+  content: "";
+  order: 1;
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+}
+.frameTitle {
+  margin-bottom: 12px;
+  font-size: clamp(1.25rem, 1.7vw, 1.5rem);
+  line-height: 1.26;
+  color: var(--heading);
+}
+.frameLead {
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.svc {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 22px 30px;
+  border-bottom: 1px solid var(--rule);
+  transition: background-color 0.3s ease;
+}
+.svc:last-child {
+  border-bottom: 0;
+}
+.svc:focus-visible {
+  outline-offset: -3px;
+}
+.anchor .svc:focus-visible {
+  outline-color: var(--gold-100);
+}
+.svcTitle {
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+  line-height: 1.24;
+  color: var(--heading);
+  transition: color 0.2s ease;
+}
+.svcBody {
+  flex: 1;
+  margin-bottom: 16px;
+  font-size: 0.94rem;
+  line-height: 1.62;
+  color: var(--text);
+}
+.more {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 9px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.more svg {
+  transition: transform 0.25s var(--ease);
+}
+.svc:hover .more svg,
+.svc:focus-visible .more svg {
+  transform: translateX(5px);
+}
+.active .svc:hover,
+.active .svc:focus-visible {
+  background: #fff;
+}
+.anchor.active .svc:hover,
+.anchor.active .svc:focus-visible {
+  background: var(--petrol-700);
+}
+.active .svc:hover .svcTitle {
+  color: var(--teal);
+}
+.anchor.active .svc:hover .svcTitle {
+  color: var(--gold-100);
+}
+
+/* Rows of the facing frame rise in each time it arrives. */
+.active .svc > * {
+  animation: rowIn 0.7s var(--ease) calc(var(--k) * 90ms + 80ms) backwards;
+}
+@keyframes rowIn {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+
+/* ---- glyphs: one drawn mark per group, played once the section is seen ---- */
+.glyph {
+  order: 2;
+  flex: none;
+  width: 56px;
+  height: 36px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.gBase {
+  opacity: 0.4;
+  stroke-width: 1;
+}
+.gBar {
+  fill: currentColor;
+  stroke: none;
+  transform: scaleY(0);
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transition: transform 0.7s var(--ease) calc(var(--k) * 80ms + 150ms);
+}
+.gDraw {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  transition: stroke-dashoffset 1s var(--ease) 150ms;
+}
+.gDrawLate {
+  transition-delay: 800ms;
+  transition-duration: 0.5s;
+}
+.gProj {
+  stroke-dasharray: 3 4;
+  opacity: 0;
+  transition: opacity 0.5s ease 1050ms;
+}
+.gDot {
+  fill: currentColor;
+  stroke: none;
+  opacity: 0;
+  transition: opacity 0.3s ease 950ms;
+}
+.seen .gBar {
+  transform: none;
+}
+.seen .gDraw {
+  stroke-dashoffset: 0;
+}
+.seen .gProj,
+.seen .gDot {
+  opacity: 1;
+}
+
+.floor {
+  width: min(760px, 90%);
+  height: 46px;
+  margin: 34px auto 0;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(27, 27, 24, 0.16), transparent 70%);
+  filter: blur(6px);
+}
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 0.71rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6e6459;
+}
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--hair-sand);
+  border-radius: 999px;
+  background: var(--surface);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    translate 0.3s var(--ease);
+}
+.arrow:hover {
+  border-color: #6e6459;
+  background: #fff;
+}
+.arrow:first-child:hover {
+  translate: -3px 0;
+}
+.arrow:last-child:hover {
+  translate: 3px 0;
+}
+.arrow:first-child svg {
+  rotate: 180deg;
+}
+
+/* Small screens: a plain column. No ring, every link live. */
+@media (max-width: 900px) {
+  .headRow {
+    grid-template-columns: 1fr;
+  }
+  .tabs,
+  .floor,
+  .controls {
+    display: none;
+  }
+  .ring {
+    margin-top: 40px;
+    perspective: none;
+    cursor: auto;
+    user-select: auto;
+    -webkit-user-select: auto;
+  }
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    transform: none;
+  }
+  .frame {
+    width: 100%;
+    opacity: 1 !important;
+    transform: none;
+    cursor: auto !important;
+  }
+  .frame::after {
+    display: none;
+  }
+  .frame .svc {
+    pointer-events: auto !important;
+  }
+  .svc > * {
+    animation: none !important;
+  }
+}
+@media (max-width: 600px) {
+  .frameHead {
+    padding: 26px 22px 22px;
+  }
+  .svc {
+    padding: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill,
+  .gBar,
+  .gDraw,
+  .gProj,
+  .gDot,
+  .more svg,
+  .arrow {
+    transition: none;
+  }
+  .active .svc > * {
+    animation: none;
+  }
+}
