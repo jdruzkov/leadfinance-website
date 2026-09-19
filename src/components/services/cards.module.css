@@ -1,0 +1,343 @@
+/*
+ * Services section: three separate cards standing proud of a green panel.
+ * Tailwind covers the heading and the closing line; this lives in a module
+ * because the cards share grid rows (subgrid) and the scroll-in is driven by
+ * a data-reveal attribute the script sets on the root:
+ *   (none)  as rendered, everything visible. Also the no-script state.
+ *   armed   hidden, waiting below the fold
+ *   in      playing, then resting
+ */
+.root {
+  --petrol: #0f3b39;
+  --teal: #1c6c68;
+  --surface: #fcf9f4;
+  --hair: #ddd1bf;
+  --text: #5c554c;
+  --mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* how far the cards stand above the panel's top edge */
+  --over: 84px;
+}
+
+/* ---- the green panel behind the cards ---- */
+.zone {
+  margin-top: calc(56px + var(--over));
+}
+.panel {
+  position: relative;
+  /* flow-root keeps the cards' negative margin from collapsing into the panel's own */
+  display: flow-root;
+  width: calc(100% - 32px);
+  /* container content width plus the panel's own side padding, so cards align with the heading */
+  max-width: 1276px;
+  margin: 0 auto;
+  padding: 0 60px 52px;
+  border-radius: 6px;
+  background: var(--petrol);
+}
+/* faint ledger lines, so the green is not a flat slab */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 47px,
+    rgba(233, 220, 187, 0.06) 47px 48px
+  );
+  pointer-events: none;
+}
+.panel > * {
+  position: relative;
+}
+
+/*
+ * Two shared rows, header and body: headers line up across the cards and all
+ * three end level. Inside a card the service rows stretch to fill, so a group
+ * with two services has no empty cell.
+ */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto 1fr;
+  gap: 0 24px;
+  margin-top: calc(var(--over) * -1);
+}
+.card {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 2;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--hair);
+  border-radius: 5px;
+  background: var(--surface);
+  box-shadow:
+    0 1px 2px rgba(27, 27, 24, 0.05),
+    0 22px 50px rgba(10, 44, 42, 0.22);
+  transition:
+    box-shadow 0.4s ease,
+    transform 0.5s var(--ease);
+}
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow:
+      0 1px 2px rgba(27, 27, 24, 0.06),
+      0 38px 76px rgba(10, 44, 42, 0.32);
+  }
+}
+
+.cardHead {
+  padding: 32px 30px 28px;
+  border-bottom: 1px solid var(--hair);
+}
+.num {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  color: var(--teal);
+}
+.num::after {
+  content: "";
+  order: 1;
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+}
+.cardTitle {
+  margin-bottom: 12px;
+  font-size: clamp(1.25rem, 1.7vw, 1.5rem);
+  line-height: 1.26;
+  color: var(--petrol);
+}
+.cardLead {
+  font-size: 0.94rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+}
+.svc {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 26px 30px;
+  border-bottom: 1px solid var(--hair);
+  transition: background-color 0.3s ease;
+}
+.svc:last-child {
+  border-bottom: 0;
+}
+.svc:hover,
+.svc:focus-visible {
+  background: #fff;
+}
+.svc:focus-visible {
+  outline-offset: -3px;
+}
+/* a teal rule grows down the left edge of the hovered row */
+.svc::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--teal);
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  transition: transform 0.45s var(--ease);
+}
+.svc:hover::before,
+.svc:focus-visible::before {
+  transform: scaleY(1);
+}
+.svcTitle {
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+  line-height: 1.24;
+  color: var(--petrol);
+  transition: color 0.2s ease;
+}
+.svc:hover .svcTitle,
+.svc:focus-visible .svcTitle {
+  color: var(--teal);
+}
+.svcBody {
+  margin-bottom: 20px;
+  font-size: 0.94rem;
+  line-height: 1.62;
+  color: var(--text);
+}
+.more {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 9px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+.more svg {
+  transition: transform 0.25s var(--ease);
+}
+.svc:hover .more svg,
+.svc:focus-visible .more svg {
+  transform: translateX(5px);
+}
+
+/* ---- closing line inside the green ---- */
+.closing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+  margin-top: 44px;
+}
+
+/* ---- glyphs: one drawn mark per group ---- */
+.glyph {
+  order: 2;
+  flex: none;
+  width: 56px;
+  height: 36px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.gBase {
+  opacity: 0.4;
+  stroke-width: 1;
+}
+.gBar {
+  fill: currentColor;
+  stroke: none;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transition: transform 0.7s var(--ease) calc(var(--i) * 140ms + 700ms + var(--k) * 80ms);
+}
+.gDraw {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s var(--ease) calc(var(--i) * 140ms + 700ms);
+}
+.gDrawLate {
+  transition-delay: calc(var(--i) * 140ms + 1350ms);
+  transition-duration: 0.5s;
+}
+.gProj {
+  stroke-dasharray: 3 4;
+  transition: opacity 0.5s ease calc(var(--i) * 140ms + 1600ms);
+}
+.gDot {
+  fill: currentColor;
+  stroke: none;
+  transition: opacity 0.3s ease calc(var(--i) * 140ms + 1500ms);
+}
+
+/* ---- scroll-in: the panel wipes up, cards rise one after another, then their rows ---- */
+[data-reveal] .panel {
+  transition: clip-path 1.1s var(--ease);
+}
+[data-reveal="armed"] .panel {
+  clip-path: inset(100% 0 0 0 round 6px);
+}
+/* opens past the top edge, so the overhanging cards are not cut off */
+[data-reveal="in"] .panel {
+  clip-path: inset(-200px -40px 0 -40px round 6px);
+}
+[data-reveal] .card {
+  transition:
+    opacity 0.8s ease calc(var(--i) * 140ms + 200ms),
+    translate 1s var(--ease) calc(var(--i) * 140ms + 200ms),
+    box-shadow 0.4s ease,
+    transform 0.5s var(--ease);
+}
+[data-reveal="armed"] .card {
+  opacity: 0;
+  translate: 0 56px;
+}
+[data-reveal] .svc > * {
+  --d: calc(var(--i) * 140ms + 650ms + var(--k) * 100ms);
+  transition:
+    opacity 0.6s ease var(--d),
+    translate 0.7s var(--ease) var(--d),
+    color 0.2s ease;
+}
+[data-reveal="armed"] .svc > * {
+  opacity: 0;
+  translate: 0 12px;
+}
+[data-reveal="armed"] .gBar {
+  transform: scaleY(0);
+}
+[data-reveal="armed"] .gDraw {
+  stroke-dashoffset: var(--len);
+}
+[data-reveal="armed"] .gProj,
+[data-reveal="armed"] .gDot {
+  opacity: 0;
+}
+
+@media (max-width: 1040px) {
+  .root {
+    --over: 56px;
+  }
+  .panel {
+    padding: 0 24px 40px;
+  }
+  .cards {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    gap: 18px;
+  }
+  .card {
+    display: block;
+  }
+}
+@media (max-width: 600px) {
+  .panel {
+    width: calc(100% - 16px);
+    padding: 0 12px 32px;
+  }
+  .closing {
+    padding: 0 8px;
+  }
+  .cardHead {
+    padding: 26px 22px 22px;
+  }
+  .svc {
+    padding: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .card,
+  .svc > *,
+  .svc::before,
+  .more svg,
+  .gBar,
+  .gDraw,
+  .gProj,
+  .gDot {
+    transition: none !important;
+  }
+}

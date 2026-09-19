@@ -8,7 +8,7 @@ export function Hero() {
     <section className="overflow-x-clip bg-bone">
       <Container className="grid items-center gap-14 py-16 md:py-24 lg:grid-cols-[0.94fr_1.06fr] lg:gap-18">
         <div>
-          <p className="eyebrow">Financial management · Estonia &amp; EU</p>
+          <p className="eyebrow">Financial management · Fractional CFO</p>
           <h1 className="mt-6 text-[clamp(2.7rem,6vw,4.4rem)] leading-[1.04] tracking-tight">
             Financial clarity for{" "}
             <em className="italic text-teal-600">growing companies</em>.
